@@ -25,7 +25,8 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
-extern struct dram_timing_info dram_timing_b0;
+/*extern struct dram_timing_info dram_timing_b0;*/
+extern struct dram_timing_info dram_timing;
 
 void spl_dram_init(void)
 {
@@ -33,7 +34,7 @@ void spl_dram_init(void)
 	if ((get_cpu_rev() & 0xfff) == CHIP_REV_2_1)
 		ddr_init(&dram_timing);
 	else
-		ddr_init(&dram_timing_b0);
+		ddr_init(&dram_timing); /*ddr_init(&dram_timing_b0);*/
 }
 
 #define I2C_PAD_CTRL	(PAD_CTL_DSE6 | PAD_CTL_HYS | PAD_CTL_PUE)
@@ -246,7 +247,7 @@ void board_init_f(ulong dummy)
 	/* Adjust pmic voltage to 1.0V for 800M */
 	setup_i2c(0, CONFIG_SYS_I2C_SPEED, 0x7f, &i2c_pad_info1);
 
-	power_init_board();
+	/*power_init_board();*/
 
 	/* DDR initialization */
 	spl_dram_init();
