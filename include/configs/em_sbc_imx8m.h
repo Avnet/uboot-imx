@@ -74,7 +74,6 @@
 #define CONFIG_OF_BOARD_SETUP
 
 #undef CONFIG_CMD_EXPORTENV
-#undef CONFIG_CMD_IMPORTENV
 #undef CONFIG_CMD_IMLS
 
 #undef CONFIG_CMD_CRC32
@@ -101,6 +100,27 @@
 #define CONFIG_PHY_ATHEROS
 #endif
 
+#define DEFAULT_MMC_MX8_ARGS \
+	"bootenvfile=uEnv.txt\0" \
+	"importbootenv=echo Importing environment from mmc${mmcdev} ...; " \
+		"env import -t ${loadaddr} ${filesize}\0" \
+	"loadbootenv=fatload mmc ${mmcdev} ${loadaddr} ${bootenvfile}\0" \
+	"envboot=mmc dev ${mmcdev}; " \
+		"if mmc rescan; then " \
+			"echo SD/MMC found on device ${mmcdev};" \
+			"if run loadbootenv; then " \
+				"echo Loaded env from ${bootenvfile};" \
+				"run importbootenv;" \
+			"fi;" \
+			"if test -n $uenvcmd; then " \
+				"echo Running uenvcmd ...;" \
+				"run uenvcmd;" \
+			"fi;" \
+		"fi;\0" \
+
+
+
+
 /*
  * Another approach is add the clocks for inmates into clks_init_on
  * in clk-imx8mq.c, then clk_ingore_unused could be removed.
@@ -125,6 +145,7 @@
 #define CONFIG_EXTRA_ENV_SETTINGS		\
 	CONFIG_MFG_ENV_SETTINGS \
 	JAILHOUSE_ENV \
+	DEFAULT_MMC_MX8_ARGS \
 	"script=boot.scr\0" \
 	"image=Image\0" \
 	"console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200\0" \
@@ -177,7 +198,8 @@
 		"fi;\0"
 
 #define CONFIG_BOOTCOMMAND \
-	   "mmc dev ${mmcdev}; if mmc rescan; then " \
+		"run envboot;" \
+		"mmc dev ${mmcdev}; if mmc rescan; then " \
 		   "if run loadbootscript; then " \
 			   "run bootscript; " \
 		   "else " \
