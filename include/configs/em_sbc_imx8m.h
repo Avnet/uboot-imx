@@ -90,8 +90,10 @@
 
 #define CONFIG_FEC_MXC
 #define CONFIG_FEC_XCV_TYPE             RGMII
-#define CONFIG_FEC_MXC_PHYADDR          0
+#define CONFIG_FEC_MXC_PHYADDR          4
 #define FEC_QUIRK_ENET_MAC
+#define CONFIG_NET_RANDOM_ETHADDR
+#define CONFIG_LIB_RAND
 
 #define CONFIG_PHY_GIGE
 #define IMX_FEC_BASE			0x30BE0000
