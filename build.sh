@@ -12,8 +12,17 @@ make distclean
 
 make em_sbc_imx8m_defconfig
 
-make -j4 
+make -j4 2>&1 | tee  ./build_log.txt
 
+echo
+MCOMPLETE=`grep -E 'failed|Error' ./build_log.txt | grep -o 'make' `
+if [ -z "$MCOMPLETE" ];then
+    echo "create u-boot.imx ... "
+else
+    echo "make u-boot Error !!!"
+    exit 2
+fi
+echo
 
 cp -f spl/u-boot-spl.bin tools/imx-boot/iMX8M/
 cp -f u-boot-nodtb.bin tools/imx-boot/iMX8M/
