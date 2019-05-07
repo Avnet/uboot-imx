@@ -227,49 +227,6 @@
 			>;
 		};
 
-		pinctrl_usdhc2_gpio: usdhc2grpgpio {
-			fsl,pins = <
-				MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12	0x41
-				MX8MQ_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
-			>;
-		};
-
-		pinctrl_usdhc2: usdhc2grp {
-			fsl,pins = <
-				MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x83
-				MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc3
-				MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc3
-				MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc3
-				MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc3
-				MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc3
-				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-			>;
-		};
-
-		pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-			fsl,pins = <
-				MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x8d
-				MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xcd
-				MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xcd
-				MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xcd
-				MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xcd
-				MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xcd
-				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-			>;
-		};
-
-		pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-			fsl,pins = <
-				MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x9f
-				MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xdf
-				MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xdf
-				MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xdf
-				MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xdf
-				MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xdf
-				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-			>;
-		};
-
 		pinctrl_sai2: sai2grp {
 			fsl,pins = <
 				MX8MQ_IOMUXC_SAI2_TXFS_SAI2_TX_SYNC	0xd6
@@ -530,17 +487,6 @@
 	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
 	bus-width = <8>;
 	non-removable;
-	status = "okay";
-};
-
-&usdhc2 {
-	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-	bus-width = <4>;
-	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
-	vmmc-supply = <&reg_usdhc2_vmmc>;
 	status = "okay";
 };
 
