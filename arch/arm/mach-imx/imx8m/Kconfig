@@ -66,6 +66,12 @@ config TARGET_EM_SBC_IMX8M
 	select SUPPORT_SPL
 	select IMX8M_LPDDR4
 
+config TARGET_MAAXBOARD_MINI
+	bool "MaaXBoard Mini"
+	select IMX8MM
+	select SUPPORT_SPL
+	select IMX8M_DDR4
+
 endchoice
 
 config SYS_SOC
@@ -77,5 +83,6 @@ source "board/freescale/imx8mq_phanbell/Kconfig"
 source "board/freescale/imx8mm_evk/Kconfig"
 source "board/freescale/imx8mm_val/Kconfig"
 source "board/embest/em_sbc_imx8m/Kconfig"
+source "board/embest/maaxboard_mini/Kconfig"
 
 endif

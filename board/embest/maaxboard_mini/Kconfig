@@ -1,0 +1,14 @@
+if TARGET_MAAXBOARD_MINI
+
+config SYS_BOARD
+	default "maaxboard_mini"
+
+config SYS_VENDOR
+	default "embest"
+
+config SYS_CONFIG_NAME
+	default "maaxboard_mini"
+
+source "board/freescale/common/Kconfig"
+
+endif
