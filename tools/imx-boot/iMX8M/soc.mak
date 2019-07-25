@@ -39,7 +39,22 @@ endif
 
 FW_DIR = imx-boot/imx-boot-tools/$(PLAT)
 
-$(MKIMG): mkimage_imx8.c
+
+ifeq ($(SOC),iMX8MM)
+DTBS_DDR4_EMBEST = maaxboard-mini.dtb
+bl31_em: bl31-mx8mm.bin
+	@cp bl31-mx8mm.bin bl31.bin
+	@echo "Select bl31.bin for imx8mm"
+
+else
+DTBS_DDR4_EMBEST = em-sbc-imx8m.dtb
+bl31_em: bl31-mx8mq.bin
+	@cp bl31-mx8mq.bin bl31.bin
+	@echo "Select bl31.bin for imx8mq"
+
+endif
+
+$(MKIMG): mkimage_imx8.c bl31_em
 	@echo "PLAT="$(PLAT) "HDMI="$(HDMI)
 	@echo "Compiling mkimage_imx8"
 	$(CC) $(CFLAGS) mkimage_imx8.c -o $(MKIMG) -lz
@@ -106,7 +121,7 @@ u-boot-ddr4-evk.itb: $(dtbs_ddr4_evk)
 	TEE_LOAD_ADDR=$(TEE_LOAD_ADDR) ATF_LOAD_ADDR=$(ATF_LOAD_ADDR) ./mkimage_fit_atf.sh $(dtbs_ddr4_evk) > u-boot-ddr4-evk.its
 	./mkimage_uboot -E -p 0x3000 -f u-boot-ddr4-evk.its u-boot-ddr4-evk.itb
 
-dtbs_ddr4_em = em-sbc-imx8m.dtb
+dtbs_ddr4_em = $(DTBS_DDR4_EMBEST)
 u-boot-ddr4-em.itb: $(dtbs_ddr4_em)
 	./$(PAD_IMAGE) bl31.bin
 	TEE_LOAD_ADDR=$(TEE_LOAD_ADDR) ATF_LOAD_ADDR=$(ATF_LOAD_ADDR) ./mkimage_fit_atf.sh $(dtbs_ddr4_em) > u-boot-ddr4-em.its
@@ -142,6 +157,8 @@ flash_ddr3l_val: flash_ddr3l_val_no_hdmi
 
 flash_ddr4_val: flash_ddr4_val_no_hdmi
 
+flash_ddr4_em: flash_ddr4_em_no_hdmi_mini
+
 endif
 
 flash_evk_no_hdmi: $(MKIMG) u-boot-spl-ddr.bin u-boot.itb
@@ -158,6 +175,9 @@ flash_ddr4_val_no_hdmi: $(MKIMG) u-boot-spl-ddr4.bin u-boot-ddr4.itb
 
 flash_ddr4_evk_no_hdmi: $(MKIMG) u-boot-spl-ddr4.bin u-boot-ddr4-evk.itb
 	./mkimage_imx8 -fit -loader u-boot-spl-ddr4.bin 0x7E1000 -second_loader u-boot-ddr4-evk.itb 0x40200000 0x60000 -out $(OUTIMG)
+
+flash_ddr4_em_no_hdmi_mini: $(MKIMG) u-boot-spl-ddr4.bin u-boot-ddr4-em.itb
+	./mkimage_imx8 -fit -loader u-boot-spl-ddr4.bin 0x7E1000 -second_loader u-boot-ddr4-em.itb 0x40200000 0x60000 -out $(OUTIMG)
 
 flash_evk_flexspi: $(MKIMG) u-boot-spl-ddr.bin u-boot.itb
 	./mkimage_imx8 -dev flexspi -fit -loader u-boot-spl-ddr.bin 0x7E2000 -second_loader u-boot.itb 0x40200000 0x60000 -out $(OUTIMG)
