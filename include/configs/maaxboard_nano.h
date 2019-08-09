@@ -84,24 +84,8 @@
 #define JH_ROOT_DTB	"imx8mn-evk-root.dtb"
 #endif
 
-#define DEFAULT_MMC_MX8_ARGS \
-	"bootenvfile=uEnv.txt\0" \
-	"importbootenv=echo Importing environment from mmc${mmcdev} ...; " \
-		"env import -t ${loadaddr} ${filesize}\0" \
-	"loadbootenv=fatload mmc ${mmcdev} ${loadaddr} ${bootenvfile}\0" \
-	"envboot=mmc dev ${mmcdev}; " \
-		"if mmc rescan; then " \
-			"echo SD/MMC found on device ${mmcdev};" \
-			"if run loadbootenv; then " \
-				"echo Loaded env from ${bootenvfile};" \
-				"run importbootenv;" \
-			"fi;" \
-			"if test -n $uenvcmd; then " \
-				"echo Running uenvcmd ...;" \
-				"run uenvcmd;" \
-			"fi;" \
-		"fi;\0" \
-
+/* support uEnv.txt to pass environment variables to the kernel */
+#include "embest_env.h"
 
 #define JAILHOUSE_ENV \
 	"jh_clk= \0 " \
@@ -178,7 +162,7 @@
 		"fi;\0"
 
 #define CONFIG_BOOTCOMMAND \
-		"run envboot;" \
+	   MMC_BOOT_UENV \
 	   "mmc dev ${mmcdev}; if mmc rescan; then " \
 		   "if run loadbootscript; then " \
 			   "run bootscript; " \
