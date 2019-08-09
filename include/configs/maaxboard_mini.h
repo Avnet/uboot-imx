@@ -111,6 +111,9 @@
 #define CONFIG_PHY_ATHEROS
 #endif
 
+/* support uEnv.txt to pass environment variables to the kernel */
+#include "embest_env.h"
+
 /*
  * Another approach is add the clocks for inmates into clks_init_on
  * in clk-imx8mm.c, then clk_ingore_unused could be removed.
@@ -155,6 +158,7 @@
 #define CONFIG_EXTRA_ENV_SETTINGS		\
 	CONFIG_MFG_ENV_SETTINGS \
 	JAILHOUSE_ENV \
+	DEFAULT_MMC_MX8_ARGS \
 	"script=boot.scr\0" \
 	"image=Image\0" \
 	"console=ttymxc1,115200 earlycon=ec_imx6q,0x30890000,115200\0" \
@@ -207,6 +211,7 @@
 		"fi;\0"
 
 #define CONFIG_BOOTCOMMAND \
+	   MMC_BOOT_UENV \
 	   "mmc dev ${mmcdev}; if mmc rescan; then " \
 		   "if run loadbootscript; then " \
 			   "run bootscript; " \
