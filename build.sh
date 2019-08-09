@@ -1,6 +1,23 @@
 #!/bin/bash
 
-TOOLCHAIN_PATH=/home/nick/toolchain/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu/bin
+###
+# TOOLCHAIN_PATH=/home/nick/toolchain/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu/bin
+# export PATH=$TOOLCHAIN_PATH:$PATH
+###
+export ARCH=arm64
+export CROSS_COMPILE=aarch64-linux-gnu-
+
+
+# check required applications are installed
+command -v ${CROSS_COMPILE}gcc >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+echo "ERROR: ${CROSS_COMPILE}gcc not found,"
+echo ""
+echo "please install the toolchain first "
+echo "and export the enviroment like \"export PATH=\$PATH:your_toolchain_path\" "
+echo ""
+exit
+fi
 
 #------------------------------------------------------------------------------
 help() {
@@ -34,14 +51,6 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
-
-
-export ARCH=arm64
-
-###
-export PATH=$TOOLCHAIN_PATH:$PATH
-###
-export CROSS_COMPILE=aarch64-linux-gnu-
 
 make distclean 
 
