@@ -170,6 +170,21 @@ int ft_board_setup(void *blob, bd_t *bd)
 }
 #endif
 
+#define SYSTEM_LED_PAD IMX_GPIO_NR(3, 2)
+#define POWER_LED_PAD IMX_GPIO_NR(3, 3)
+static iomux_v3_cfg_t const leds_pads[] = {
+	IMX8MM_PAD_NAND_CE1_B_GPIO3_IO2  | MUX_PAD_CTRL(NO_PAD_CTRL),
+	IMX8MM_PAD_NAND_CE2_B_GPIO3_IO3  | MUX_PAD_CTRL(NO_PAD_CTRL),
+};
+static void led_on(void)
+{
+	imx_iomux_v3_setup_multiple_pads(leds_pads,
+					 ARRAY_SIZE(leds_pads));
+
+	gpio_request(POWER_LED_PAD, "sys_led");
+	gpio_direction_output(POWER_LED_PAD, 1);
+}
+
 #ifdef CONFIG_FEC_MXC
 #define FEC_RST_PAD IMX_GPIO_NR(4, 22)
 static iomux_v3_cfg_t const fec1_rst_pads[] = {
@@ -393,6 +408,9 @@ int board_ehci_usb_phy_mode(struct udevice *dev)
 
 int board_init(void)
 {
+
+	led_on();
+
 #ifdef CONFIG_USB_TCPC
 	setup_typec();
 #endif
