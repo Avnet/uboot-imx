@@ -32,12 +32,13 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
+#define UART1_PAD_CTRL	(PAD_CTL_PE | PAD_CTL_PUE | PAD_CTL_DSE0 )
 #define UART_PAD_CTRL	(PAD_CTL_DSE6 | PAD_CTL_FSEL1)
 #define WDOG_PAD_CTRL	(PAD_CTL_DSE6 | PAD_CTL_ODE | PAD_CTL_PUE | PAD_CTL_PE)
 
-static iomux_v3_cfg_t const uart_pads[] = {
-	IMX8MM_PAD_UART2_RXD_UART2_RX | MUX_PAD_CTRL(UART_PAD_CTRL),
-	IMX8MM_PAD_UART2_TXD_UART2_TX | MUX_PAD_CTRL(UART_PAD_CTRL),
+static iomux_v3_cfg_t const uart1_pads[] = {
+	IMX8MM_PAD_UART1_RXD_UART1_RX | MUX_PAD_CTRL(UART1_PAD_CTRL),
+	IMX8MM_PAD_UART1_TXD_UART1_TX | MUX_PAD_CTRL(UART1_PAD_CTRL),
 };
 
 static iomux_v3_cfg_t const wdog_pads[] = {
@@ -135,7 +136,7 @@ int board_early_init_f(void)
 
 	set_wdog_reset(wdog);
 
-	imx_iomux_v3_setup_multiple_pads(uart_pads, ARRAY_SIZE(uart_pads));
+    imx_iomux_v3_setup_multiple_pads(uart1_pads, ARRAY_SIZE(uart1_pads));
 
 #ifdef CONFIG_NAND_MXS
 	setup_gpmi_nand(); /* SPL will call the board_early_init_f */
@@ -169,6 +170,19 @@ int ft_board_setup(void *blob, bd_t *bd)
 	return 0;
 }
 #endif
+
+#define POWER_LED_PAD IMX_GPIO_NR(3, 3)
+static iomux_v3_cfg_t const leds_pads[] = {
+	IMX8MM_PAD_NAND_CE2_B_GPIO3_IO3  | MUX_PAD_CTRL(NO_PAD_CTRL),
+};
+static void led_on(void)
+{
+	imx_iomux_v3_setup_multiple_pads(leds_pads,
+					 ARRAY_SIZE(leds_pads));
+
+	gpio_request(POWER_LED_PAD, "sys_led");
+	gpio_direction_output(POWER_LED_PAD, 1);
+}
 
 #ifdef CONFIG_FEC_MXC
 #define FEC_RST_PAD IMX_GPIO_NR(4, 22)
@@ -393,6 +407,8 @@ int board_ehci_usb_phy_mode(struct udevice *dev)
 
 int board_init(void)
 {
+	led_on();
+
 #ifdef CONFIG_USB_TCPC
 	setup_typec();
 #endif
