@@ -130,6 +130,9 @@
 			   "else run jh_netboot; fi; \0" \
 	"jh_netboot=setenv fdt_file fsl-imx8mm-evk-root.dtb; setenv jh_clk clk_ignore_unused; run netboot; \0 "
 
+#define ENABLE_UART4_ACCESS 	 "uart_domain=mw 0x303d0518 0xff; \0"
+#define CONFIG_PREBOOT 	 "run uart_domain"
+
 #ifdef CONFIG_NAND_BOOT
 #define MFG_NAND_PARTITION "mtdparts=gpmi-nand:64m(nandboot),16m(nandfit),32m(nandkernel),16m(nanddtb),8m(nandtee),-(nandrootfs) "
 #endif
@@ -162,6 +165,7 @@
 	CONFIG_MFG_ENV_SETTINGS \
 	JAILHOUSE_ENV \
 	DEFAULT_MMC_MX8_ARGS \
+	ENABLE_UART4_ACCESS \
 	"script=boot.scr\0" \
 	"image=Image\0" \
 	"console=ttymxc1,115200 earlycon=ec_imx6q,0x30890000,115200\0" \
