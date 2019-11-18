@@ -14,8 +14,7 @@
 #include <asm/arch/imx8mq_pins.h>
 #include <asm/arch/sys_proto.h>
 #include <power/pmic.h>
-#include <power/pfuze100_pmic.h>
-#include "../../freescale/common/pfuze.h"
+#include <power/bd71837.h>
 #include <asm/arch/clock.h>
 #include <asm/mach-imx/gpio.h>
 #include <asm/mach-imx/mxc_i2c.h>
@@ -155,36 +154,28 @@ int power_init_board(void)
 {
 	struct pmic *p;
 	int ret;
-	unsigned int reg;
 
-	ret = power_pfuze100_init(I2C_PMIC);
-	if (ret)
-		return -ENODEV;
+	ret = power_bd71837_init(I2C_PMIC);
+    if (ret) {
+		printf("power init failed");
+        return -ENODEV;
+    }
 
-	p = pmic_get("PFUZE100");
-	ret = pmic_probe(p);
-	if (ret)
-		return -ENODEV;
+	p = pmic_get("BD71837");
+	pmic_probe(p);
 
-	pmic_reg_read(p, PFUZE100_DEVICEID, &reg);
-	printf("PMIC:  PFUZE100 ID=0x%02x\n", reg);
+    printf("set buck8 to 1.2v for DDR4\n");
+	/* unlock the PMIC regs */
+	pmic_reg_write(p, BD71837_REGLOCK, 0x1);
 
-	pmic_reg_read(p, PFUZE100_SW3AVOL, &reg);
-	if ((reg & 0x3f) != 0x18) {
-		reg &= ~0x3f;
-		reg |= 0x18;
-		pmic_reg_write(p, PFUZE100_SW3AVOL, reg);
-	}
+	/* increase VDD_DRAM to 0.9v for 2Ghz DDR */
+	pmic_reg_write(p, BD71837_BUCK5_VOLT, 0x2);
 
-	ret = pfuze_mode_init(p, APS_PFM);
-	if (ret < 0)
-		return ret;
+	/* increase NVCC_DRAM_1V2 to 1.2v for DDR4 */
+	pmic_reg_write(p, BD71837_BUCK8_VOLT, 0x28);
 
-	/* set SW3A standby mode to off */
-	pmic_reg_read(p, PFUZE100_SW3AMODE, &reg);
-	reg &= ~0xf;
-	reg |= APS_OFF;
-	pmic_reg_write(p, PFUZE100_SW3AMODE, reg);
+	/* lock the PMIC regs */
+	pmic_reg_write(p, BD71837_REGLOCK, 0x11);
 
 	return 0;
 }
@@ -246,7 +237,7 @@ void board_init_f(ulong dummy)
 	/* Adjust pmic voltage to 1.0V for 800M */
 	setup_i2c(0, CONFIG_SYS_I2C_SPEED, 0x7f, &i2c_pad_info1);
 
-	/*power_init_board();*/
+	power_init_board();
 
 	/* DDR initialization */
 	spl_dram_init();
