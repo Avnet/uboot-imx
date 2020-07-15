@@ -4,8 +4,8 @@
  * SPDX-License-Identifier:	GPL-2.0+
  */
 
-#ifndef __EM_SBC_IMX8M_H
-#define __EM_SBC_IMX8M_H
+#ifndef __MAAXBOARD_H
+#define __MAAXBOARD_H
 
 #include <linux/sizes.h>
 #include <asm/arch/imx-regs.h>
@@ -154,7 +154,7 @@
 	"fdt_addr=0x43000000\0"			\
 	"fdt_high=0xffffffffffffffff\0"		\
 	"boot_fdt=try\0" \
-	"fdt_file=em-sbc-imx8m.dtb\0" \
+	"fdt_file=maaxboard-dcss-hdmi.dtb\0" \
 	"initrd_addr=0x43800000\0"		\
 	"initrd_high=0xffffffffffffffff\0" \
 	"mmcdev="__stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \

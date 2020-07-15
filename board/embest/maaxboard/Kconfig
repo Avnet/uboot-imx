@@ -1,13 +1,13 @@
-if TARGET_EM_SBC_IMX8M
+if TARGET_MAAXBOARD
 
 config SYS_BOARD
-	default "em_sbc_imx8m"
+	default "maaxboard"
 
 config SYS_VENDOR
 	default "embest"
 
 config SYS_CONFIG_NAME
-	default "em_sbc_imx8m"
+	default "maaxboard"
 
 source "board/freescale/common/Kconfig"
 

@@ -58,8 +58,8 @@ if [ "${SOC_TYPE}" == "mx8m_mini" ] ; then
     echo "maaxboard_mini_defconfig"
     make maaxboard_mini_defconfig
 else
-    echo "em_sbc_imx8m_defconfig"
-    make em_sbc_imx8m_defconfig
+    echo "maaxboard_defconfig"
+    make maaxboard_defconfig
 fi
 
 make -j4 2>&1 | tee  ./build_log.txt
@@ -79,7 +79,7 @@ cp -f u-boot-nodtb.bin tools/imx-boot/iMX8M/
 if [ "${SOC_TYPE}" == "mx8m_mini" ] ; then
     cp -f arch/arm/dts/maaxboard-mini.dtb  tools/imx-boot/iMX8M/
 else
-    cp -f arch/arm/dts/em-sbc-imx8m.dtb tools/imx-boot/iMX8M/
+    cp -f arch/arm/dts/maaxboard.dtb tools/imx-boot/iMX8M/
 fi
 
 cd tools/imx-boot/

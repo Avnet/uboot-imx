@@ -47,7 +47,7 @@ bl31_em: bl31-mx8mm.bin
 	@echo "Select bl31.bin for imx8mm"
 
 else
-DTBS_DDR4_EMBEST = em-sbc-imx8m.dtb
+DTBS_DDR4_EMBEST = maaxboard.dtb
 bl31_em: bl31-mx8mq.bin
 	@cp bl31-mx8mq.bin bl31.bin
 	@echo "Select bl31.bin for imx8mq"
