@@ -168,7 +168,7 @@
 	ENABLE_UART4_ACCESS \
 	"script=boot.scr\0" \
 	"image=Image\0" \
-	"console=ttymxc1,115200 earlycon=ec_imx6q,0x30890000,115200\0" \
+	"console=ttymxc0,115200 earlycon=ec_imx6q,0x30890000,115200\0" \
 	"fdt_addr=0x43000000\0"			\
 	"fdt_high=0xffffffffffffffff\0"		\
 	"boot_fdt=try\0" \
