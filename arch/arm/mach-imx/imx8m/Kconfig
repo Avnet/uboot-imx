@@ -93,6 +93,12 @@ config TARGET_IMX8MN_EVK
 	select SUPPORT_SPL
 	select IMX8M_LPDDR4
 
+config TARGET_MAAXBOARD_NANO
+        bool "maaxboard_nano"
+	select IMX8MN
+        select SUPPORT_SPL
+        select IMX8M_LPDDR4
+
 config TARGET_IMX8MN_DDR4_EVK
 	bool "imx8mn DDR4 EVK board"
 	select IMX8MN
@@ -137,6 +143,7 @@ source "board/freescale/imx8mm_ab2/Kconfig"
 source "board/freescale/imx8mm_evk/Kconfig"
 source "board/freescale/imx8mm_val/Kconfig"
 source "board/freescale/imx8mn_evk/Kconfig"
+source "board/freescale/maaxboard_nano/Kconfig"
 source "board/freescale/imx8mp_evk/Kconfig"
 source "board/toradex/verdin-imx8mm/Kconfig"
 
