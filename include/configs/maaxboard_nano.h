@@ -69,7 +69,7 @@
 #define PHY_ANEG_TIMEOUT 20000
 
 #define CONFIG_FEC_XCV_TYPE             RGMII
-#define CONFIG_FEC_MXC_PHYADDR          0
+#define CONFIG_FEC_MXC_PHYADDR          4
 #define FEC_QUIRK_ENET_MAC
 
 #define IMX_FEC_BASE			0x30BE0000
@@ -85,6 +85,25 @@
 #else
 #define JH_ROOT_DTB	"imx8mn-evk-root.dtb"
 #endif
+
+#define DEFAULT_MMC_MX8_ARGS \
+	"bootenvfile=uEnv.txt\0" \
+	"importbootenv=echo Importing environment from mmc${mmcdev} ...; " \
+		"env import -t ${loadaddr} ${filesize}\0" \
+	"loadbootenv=fatload mmc ${mmcdev} ${loadaddr} ${bootenvfile}\0" \
+	"envboot=mmc dev ${mmcdev}; " \
+		"if mmc rescan; then " \
+			"echo SD/MMC found on device ${mmcdev};" \
+			"if run loadbootenv; then " \
+				"echo Loaded env from ${bootenvfile};" \
+				"run importbootenv;" \
+			"fi;" \
+			"if test -n $uenvcmd; then " \
+				"echo Running uenvcmd ...;" \
+				"run uenvcmd;" \
+			"fi;" \
+		"fi;\0" \
+
 
 #define JAILHOUSE_ENV \
 	"jh_clk= \0 " \
@@ -107,6 +126,7 @@
 #define CONFIG_EXTRA_ENV_SETTINGS		\
 	CONFIG_MFG_ENV_SETTINGS \
 	JAILHOUSE_ENV \
+	DEFAULT_MMC_MX8_ARGS \
 	"script=boot.scr\0" \
 	"image=Image\0" \
 	"splashimage=0x50000000\0" \
@@ -160,6 +180,7 @@
 		"fi;\0"
 
 #define CONFIG_BOOTCOMMAND \
+		"run envboot;" \
 	   "mmc dev ${mmcdev}; if mmc rescan; then " \
 		   "if run loadbootscript; then " \
 			   "run bootscript; " \
