@@ -1,0 +1,139 @@
+/*
+ * Copyright 2020 EMBEST
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/* 40-pin extended GPIO, expanded into SPI, I2C, PWM and other interfaces */
+
+&iomuxc {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_hog>;
+
+	imx8mn-evk {
+		pinctrl_hog: hoggrp {
+			fsl,pins = <
+				/*Default GPIOs*/
+				MX8MN_IOMUXC_SAI3_MCLK_GPIO5_IO2 		0x16	/* PIN 7,  GPIO 4  */
+				MX8MN_IOMUXC_SAI3_MCLK_GPIO5_IO2		0x16	/* PIN 11, GPIO 17 */
+				MX8MN_IOMUXC_SAI3_RXC_GPIO4_IO29 		0x16	/* PIN 13, GPIO 27 */
+				MX8MN_IOMUXC_SAI3_RXFS_GPIO4_IO28 		0x16	/* PIN 15, GPIO 22 */
+				MX8MN_IOMUXC_SD1_DATA6_GPIO2_IO8 		0x16	/* PIN 22, GPIO 25 */
+				MX8MN_IOMUXC_SD1_STROBE_GPIO2_IO11		0x16	/* PIN 36, GPIO 16 */
+				MX8MN_IOMUXC_SD1_DATA7_GPIO2_IO9 		0x16	/* PIN 37, GPIO 26 */
+				MX8MN_IOMUXC_SPDIF_EXT_CLK_GPIO5_IO5	0x16	/* PIN 26, GPIO 8  */
+				MX8MN_IOMUXC_GPIO1_IO15_GPIO1_IO15		0x16	/* PIN 29, GPIO 5  */
+				MX8MN_IOMUXC_GPIO1_IO01_GPIO1_IO1		0x16	/* PIN 31, GPIO 6  */
+				MX8MN_IOMUXC_SAI3_TXC_GPIO5_IO0			0x16	/* PIN 12, GPIO 18 */
+				MX8MN_IOMUXC_SAI3_TXFS_GPIO4_IO31		0x16	/* PIN 35, GPIO 19 */
+				MX8MN_IOMUXC_SAI3_RXD_GPIO4_IO30		0x16	/* PIN 38, GPIO 20 */
+				MX8MN_IOMUXC_SAI3_TXD_GPIO5_IO1			0x16	/* PIN 40, GPIO 21 */
+			>;
+		};
+
+		pinctrl_ecspi1: ecspi1grp {
+			fsl,pins = <
+				MX8MN_IOMUXC_ECSPI1_SCLK_ECSPI1_SCLK	0x82
+				MX8MN_IOMUXC_ECSPI1_MOSI_ECSPI1_MOSI 	0x82
+				MX8MN_IOMUXC_ECSPI1_MISO_ECSPI1_MISO	0x82
+			>;
+		};
+
+		pinctrl_ecspi1_cs: ecspi1cs {
+			fsl,pins = <
+				MX8MN_IOMUXC_ECSPI1_SS0_GPIO5_IO9		0x40000
+			>;
+		};
+
+		pinctrl_i2c2: i2c2grp {
+			fsl,pins = <
+				MX8MN_IOMUXC_I2C2_SCL_I2C2_SCL			0x400001c3
+				MX8MN_IOMUXC_I2C2_SDA_I2C2_SDA			0x400001c3
+			>;
+		};
+
+		pinctrl_i2c3: i2c3grp {
+			fsl,pins = <
+				MX8MN_IOMUXC_I2C3_SCL_I2C3_SCL			0x400001c3
+				MX8MN_IOMUXC_I2C2_SDA_I2C2_SDA			0x400001c3
+			>;
+		};
+
+		pinctrl_uart2: uart2grp {
+			fsl,pins = <
+				MX8MN_IOMUXC_UART2_TXD_UART2_DCE_TX		0x140
+				MX8MN_IOMUXC_UART2_RXD_UART2_DCE_RX		0x140
+			>;
+		};
+
+		pinctrl_pwm1: pwm1_grp {
+			fsl,pins = <
+				MX8MN_IOMUXC_SPDIF_EXT_CLK_PWM1_OUT		0x06
+			>;
+		};
+
+		pinctrl_pwm2: pwm2_grp {
+			fsl,pins = <
+				MX8MN_IOMUXC_SPDIF_RX_PWM2_OUT		0x06
+			>;
+		};
+	};
+};
+
+&ecspi1{
+	#address-cells = <1>;
+	#size-cells = <0>;
+	fsl,spi-num-chipselects = < 1 >;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_ecspi1 &pinctrl_ecspi1_cs>;
+	cs-gpios = <&gpio5 9 0 > ;
+	status = "okay";
+ 
+	spidev@0x00{
+		#address-cellss=<1>;
+		#size-cells=<1>;
+		compatible = "spidev", "semtech,sx1301";
+		spi-max-frequency = <20000000>;
+		reg = <0>;
+	};
+};
+
+&i2c2 {
+	clock-frequency = <100000>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_i2c2>;
+	status = "okay";
+};
+
+&i2c3 {
+	clock-frequency = <100000>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_i2c3>;
+	status = "okay";
+};
+
+&uart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart2>;
+	status = "okay";
+};
+
+&pwm1 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_pwm1>;
+        status = "okay";
+};
+
+&pwm2 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_pwm2>;
+        status = "okay";
+};

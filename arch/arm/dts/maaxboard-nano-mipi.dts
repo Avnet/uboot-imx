@@ -1,0 +1,94 @@
+/*
+ * Copyright 2020 EMBEST
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+#include "maaxboard-nano.dtsi"
+#include "maaxboard-nano-extended-gpio.dtsi"
+
+/ {
+	backlight {
+			compatible = "pwm-backlight";
+			pwms = <&pwm1 0 40000 0>;
+			brightness-levels = <0 8 32 64 96 128 160 192 224 255>;
+			default-brightness-level = <8>;
+			status = "okay";
+	};
+};
+
+&mipi_dsi {
+	status = "okay";
+
+	panel@0 {
+		compatible = "ilitek,ili9881c";
+		reg = <0>;
+		pinctrl-0 = <&pinctrl_mipi_dsi_en>;
+		enable-gpio = <&gpio1 13 GPIO_ACTIVE_HIGH>;
+		dsi-lanes = <2>;
+		status = "okay";
+	};
+};
+
+&iomuxc {
+	imx8mn-evk {
+		pinctrl_mipi_dsi_en: mipi_dsi_en {
+			fsl,pins = <
+				MX8MN_IOMUXC_GPIO1_IO13_GPIO1_IO13		  0x16  /* DSI_EN */
+			>;
+		};
+
+		pinctrl_pwm1: pwm1_grp {
+			fsl,pins = <
+				MX8MN_IOMUXC_GPIO1_IO08_PWM1_OUT   0x06
+			>;
+		};
+
+		pinctrl_ts_ft5426: ft5426_pinsgrp {
+			fsl,pins = <
+				MX8MN_IOMUXC_GPIO1_IO11_GPIO1_IO11  0x19 /* DSI_TS_nINT */
+				MX8MN_IOMUXC_GPIO1_IO12_GPIO1_IO12   0x19 /* DSI_TS_RST */
+			>;
+		};
+	};
+};
+
+&pwm1 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_pwm1>;
+        status = "okay";
+};
+
+&i2c4 {
+	clock-frequency = <400000>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_i2c4>;
+	status = "okay";
+
+	ft5426_ts@38 {
+		compatible = "focaltech,fts";
+		reg = <0x38>;
+		pinctrl-0 = <&pinctrl_ts_ft5426>;
+
+		interrupt-parent = <&gpio1>;
+		interrupts = <11 2>;
+		focaltech,reset-gpio = <&gpio1 12 0x01>;
+		focaltech,irq-gpio = <&gpio1 11 0x02>;
+		focaltech,max-touch-number = <10>;
+		focaltech,panel-type = <0x54260002>;/* _FT5426 */
+		focaltech,display-coords =  <0 0 720 1280>;
+		focaltech,have-key;
+		focaltech,key-number = <3>;
+		focaltech,keys = <139 102 158>;
+		focaltech,key-y-coord = <2000>;
+		focaltech,key-x-coords = <200 600 800>;
+	}; 
+};

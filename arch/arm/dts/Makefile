@@ -796,7 +796,7 @@ dtb-$(CONFIG_ARCH_IMX8M) += \
 	imx8mm-ab2.dtb \
 	imx8mn-ddr4-ab2.dtb \
 	imx8mn-ab2.dtb \
-	maaxboard_nano.dtb
+	maaxboard-nano-mipi.dtb	
 
 dtb-$(CONFIG_ARCH_IMXRT) += imxrt1050-evk.dtb
 

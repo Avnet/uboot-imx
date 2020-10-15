@@ -97,7 +97,7 @@ config TARGET_MAAXBOARD_NANO
         bool "maaxboard_nano"
 	select IMX8MN
         select SUPPORT_SPL
-        select IMX8M_LPDDR4
+        select IMX8M_DDR4
 
 config TARGET_IMX8MN_DDR4_EVK
 	bool "imx8mn DDR4 EVK board"
