@@ -35,8 +35,6 @@
 #define CONFIG_POWER
 #define CONFIG_POWER_I2C
 #ifdef CONFIG_IMX8M_DDR4
-#define CONFIG_POWER_BD71837
-#else
 #define CONFIG_POWER_PCA9450
 #endif
 
