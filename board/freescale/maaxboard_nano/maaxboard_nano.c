@@ -293,11 +293,28 @@ int board_ehci_usb_phy_mode(struct udevice *dev)
 #define DISPMIX				9
 #define MIPI				10
 
+#define SYSTEM_LED_PAD IMX_GPIO_NR(3, 25)
+#define POWER_LED_PAD IMX_GPIO_NR(3, 19)
+static iomux_v3_cfg_t const leds_pads[] = {
+	IMX8MN_PAD_SAI5_MCLK__GPIO3_IO25  | MUX_PAD_CTRL(NO_PAD_CTRL),
+	IMX8MN_PAD_SAI5_RXFS__GPIO3_IO19  | MUX_PAD_CTRL(NO_PAD_CTRL),
+};
+static void led_on(void)
+{
+	imx_iomux_v3_setup_multiple_pads(leds_pads, ARRAY_SIZE(leds_pads));
+
+	gpio_request(POWER_LED_PAD, "pwr_led");
+	gpio_direction_output(POWER_LED_PAD, 1);
+}
+
 int board_init(void)
 {
 #ifdef CONFIG_USB_TCPC
 	setup_typec();
 #endif
+
+	/* turn the LED on */
+	led_on();
 
 	if (IS_ENABLED(CONFIG_FEC_MXC))
 		setup_fec();
