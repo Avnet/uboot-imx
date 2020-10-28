@@ -13,6 +13,7 @@
 #include <asm/arch/sys_proto.h>
 #include <asm/mach-imx/gpio.h>
 #include <asm/mach-imx/mxc_i2c.h>
+#include <asm/mach-imx/boot_mode.h>
 #include <i2c.h>
 #include <asm/io.h>
 #include "../common/tcpc.h"
@@ -307,11 +308,45 @@ int board_init(void)
 	return 0;
 }
 
+long long baord_env_boot_device(void)
+{
+	enum boot_device boot_dev = get_boot_device();
+
+	debug("maaxboard boot_device=%d\n", boot_dev);
+	switch (boot_dev) {
+	case SD2_BOOT:
+	case MMC2_BOOT:
+		printf("Boot from SD card\n");
+		env_set("mmcdev", "1");
+		env_set("mmcroot", "/dev/mmcblk1p2 rootwait rw");
+		env_set("bootdev", "sd");
+		break;
+	case SD3_BOOT:
+	case MMC3_BOOT:
+		printf("Boot from EMMC\n");
+		env_set("mmcdevs", "2");
+		env_set("mmcroot", "/dev/mmcblk2p2 rootwait rw");
+		env_set("bootdev", "emmc");
+		break;
+	case QSPI_BOOT:
+	case SPI_NOR_BOOT:
+		printf("Boot from NOR Flash\n");
+		env_set("bootdev", "nor");
+		break;
+	default:
+		break;
+	}
+	return 0;
+}
+
 int board_late_init(void)
 {
 #ifdef CONFIG_ENV_IS_IN_MMC
 	board_late_mmc_env_init();
 #endif
+
+	/* Set mmcblk env */
+	baord_env_boot_device();
 
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 	env_set("board_name", "DDR4 EVK");
