@@ -63,6 +63,11 @@ config TARGET_IMX8MQ_DDR4_VAL
 	bool "imx8mq_ddr4_val"
 	select IMX8MQ
 
+config TARGET_MAAXBOARD
+	bool "maaxboard"
+	select IMX8MQ
+	select IMX8M_DDR4
+
 config TARGET_IMX8MM_DDR4_VAL
 	bool "imx8mm DDR4 validation board"
 	select IMX8MM
@@ -146,5 +151,6 @@ source "board/freescale/imx8mn_evk/Kconfig"
 source "board/freescale/maaxboard_nano/Kconfig"
 source "board/freescale/imx8mp_evk/Kconfig"
 source "board/toradex/verdin-imx8mm/Kconfig"
+source "board/embest/maaxboard/Kconfig"
 
 endif
