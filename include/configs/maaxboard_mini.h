@@ -13,7 +13,7 @@
 #define CONFIG_SPL_MAX_SIZE		(148 * 1024)
 #define CONFIG_SYS_MONITOR_LEN		SZ_512K
 #define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_USE_SECTOR
-#define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR	(0x300 + CONFIG_SECONDARY_BOOT_SECTOR_OFFSET)
+#define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR	 (0x300 + CONFIG_SECONDARY_BOOT_SECTOR_OFFSET)
 #define CONFIG_SYS_MMCSD_FS_BOOT_PARTITION	1
 #define CONFIG_SYS_UBOOT_BASE	\
 	(QSPI0_AMBA_BASE + CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR * 512)
@@ -73,6 +73,9 @@
 #define MFG_NAND_PARTITION "mtdparts=gpmi-nand:64m(nandboot),16m(nandfit),32m(nandkernel),16m(nanddtb),8m(nandtee),-(nandrootfs)"
 #endif
 
+/* support uEnv.txt to pass environment variables to the kernel */
+#include "embest_env.h"
+
 /*
  * Another approach is add the clocks for inmates into clks_init_on
  * in clk-imx8mm.c, then clk_ingore_unused could be removed.
@@ -102,8 +105,8 @@
 	"fdt_addr=0x43000000\0"			\
 	"fdt_high=0xffffffffffffffff\0" \
 	"mtdparts=" MFG_NAND_PARTITION "\0" \
-	"console=ttymxc1,115200 earlycon=ec_imx6q,0x30890000,115200\0" \
-	"bootargs=console=ttymxc1,115200 earlycon=ec_imx6q,0x30890000,115200 ubi.mtd=nandrootfs "  \
+	"console=ttymxc0,115200 earlycon=ec_imx6q,0x30890000,115200\0" \
+	"bootargs=console=ttymxc0,115200 earlycon=ec_imx6q,0x30890000,115200 ubi.mtd=nandrootfs "  \
 		"root=ubi0:nandrootfs rootfstype=ubifs "		     \
 		MFG_NAND_PARTITION \
 		"\0" \
@@ -115,10 +118,11 @@
 #define CONFIG_EXTRA_ENV_SETTINGS		\
 	CONFIG_MFG_ENV_SETTINGS \
 	JAILHOUSE_ENV \
+	DEFAULT_MMC_MX8_ARGS \
 	"script=boot.scr\0" \
 	"image=Image\0" \
 	"splashimage=0x50000000\0" \
-	"console=ttymxc1,115200\0" \
+	"console=ttymxc0,115200\0" \
 	"fdt_addr=0x43000000\0"			\
 	"fdt_high=0xffffffffffffffff\0"		\
 	"boot_fit=no\0" \
@@ -168,6 +172,7 @@
 		"fi;\0"
 
 #define CONFIG_BOOTCOMMAND \
+		MMC_BOOT_UENV \
 	   "mmc dev ${mmcdev}; if mmc rescan; then " \
 		   "if run loadbootscript; then " \
 			   "run bootscript; " \
@@ -199,6 +204,8 @@
 #define CONFIG_ENV_SPI_MODE		CONFIG_SF_DEFAULT_MODE
 #define CONFIG_ENV_SPI_MAX_HZ		CONFIG_SF_DEFAULT_SPEED
 #endif
+
+#define CONFIG_ENV_SIZE			0x1000
 #define CONFIG_SYS_MMC_ENV_DEV		0   /* USDHC2 */
 #define CONFIG_MMCROOT			"/dev/mmcblk1p2"  /* USDHC2 */
 
@@ -228,13 +235,8 @@
 /* USDHC */
 #define CONFIG_FSL_USDHC
 
-#ifdef CONFIG_TARGET_IMX8MM_DDR4_EVK
 #define CONFIG_SYS_FSL_USDHC_NUM	1
-#else
-#define CONFIG_SYS_FSL_USDHC_NUM	2
-#endif
 #define CONFIG_SYS_FSL_ESDHC_ADDR       0
-
 #define CONFIG_SYS_MMC_IMG_LOAD_PART	1
 
 #ifdef CONFIG_FSL_FSPI
