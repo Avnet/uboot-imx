@@ -1,0 +1,14 @@
+#!/bin/bash
+
+TOOLCHAIN_PATH=/home/eric/toolchains/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/bin
+
+
+export PATH=$TOOLCHAIN_PATH:$PATH
+###
+export ARCH=arm64
+#export CROSS_COMPILE=aarch64-linux-gnu-
+export CROSS_COMPILE=aarch64-none-linux-gnu-
+
+make distclean
+make maaxboard_mini_defconfig
+make

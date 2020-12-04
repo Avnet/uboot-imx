@@ -783,6 +783,7 @@ dtb-$(CONFIG_ARCH_IMX8) += \
 
 dtb-$(CONFIG_ARCH_IMX8M) += \
 	maaxboard.dtb \
+	maaxboard-mini.dtb \
 	imx8mm-evk.dtb \
 	imx8mm-ddr4-evk.dtb \
 	imx8mm-ddr3l-val.dtb \
