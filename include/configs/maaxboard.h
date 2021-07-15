@@ -61,6 +61,7 @@
 
 /* support uEnv.txt to pass environment variables to the kernel */
 #include "embest_env.h"
+#include "embest_fdt_overlay.h"
 
 /*
  * Another approach is add the clocks for inmates into clks_init_on
@@ -87,6 +88,7 @@
 	CONFIG_MFG_ENV_SETTINGS \
 	JAILHOUSE_ENV \
 	DEFAULT_MMC_MX8_ARGS \
+	MMC_FDT_OVERLAY_SETTING \
 	"script=boot.scr\0" \
 	"image=Image\0" \
 	"splashimage=0x50000000\0" \
@@ -111,6 +113,7 @@
 		"run mmcargs; " \
 		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
 			"if run loadfdt; then " \
+                "echo dtbdtb -- ${fdt_file} $enable_fdt_overlay; " \
 				"booti ${loadaddr} - ${fdt_addr}; " \
 			"else " \
 				"echo WARN: Cannot load the DT; " \
@@ -141,16 +144,7 @@
 
 #define CONFIG_BOOTCOMMAND \
 		MMC_BOOT_UENV \
-	   "mmc dev ${mmcdev}; if mmc rescan; then " \
-		   "if run loadbootscript; then " \
-			   "run bootscript; " \
-		   "else " \
-			   "if run loadimage; then " \
-				   "run mmcboot; " \
-			   "else run netboot; " \
-			   "fi; " \
-		   "fi; " \
-	   "else booti ${loadaddr} - ${fdt_addr}; fi"
+		MMC_BOOT_WITH_FDT_OVERLAY
 
 /* Link Definitions */
 #define CONFIG_LOADADDR			0x40480000
