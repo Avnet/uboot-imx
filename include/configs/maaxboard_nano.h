@@ -74,6 +74,10 @@
 #define BOOTENV
 #endif
 
+/* support uEnv.txt to pass environment variables to the kernel */
+#include "embest_env.h"
+#include "embest_fdt_overlay.h"
+
 /*
  * Another approach is add the clocks for inmates into clks_init_on
  * in clk-imx8mm.c, then clk_ingore_unused could be removed.
@@ -106,6 +110,8 @@
 	CONFIG_MFG_ENV_SETTINGS \
 	JAILHOUSE_ENV \
 	BOOTENV \
+	DEFAULT_MMC_MX8_ARGS \
+	MMC_FDT_OVERLAY_SETTING \
 	"scriptaddr=0x43500000\0" \
 	"kernel_addr_r=" __stringify(CONFIG_LOADADDR) "\0" \
 	"bsp_script=boot.scr\0" \
@@ -171,6 +177,14 @@
 		   "fi; " \
 	   "fi;"
 
+
+#ifdef EM_UENV_FDTO_SUPPORT
+#undef CONFIG_BOOTCOMMAND
+#define CONFIG_BOOTCOMMAND      \
+		"run distro_bootcmd;"   \
+		MMC_BOOT_UENV           \
+		MMC_BOOT_WITH_FDT_OVERLAY
+#endif
 
 /* Link Definitions */
 #define CONFIG_LOADADDR			0x40480000
