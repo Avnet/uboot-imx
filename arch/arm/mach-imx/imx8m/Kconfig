@@ -137,6 +137,16 @@ config TARGET_IMX8MN_DDR4_EVK
 	select MISC
 	select SPL_CRYPTO_SUPPORT if SPL
 
+config TARGET_MAAXBOARD_NANO
+	bool "maaxboard_nano board"
+	select IMX8MN
+	select SUPPORT_SPL
+	select IMX8M_DDR4
+	select FSL_CAAM
+	select FSL_BLOB
+	select MISC
+	select SPL_CRYPTO_SUPPORT if SPL
+
 config TARGET_IMX8MN_DDR3_EVK
 	bool "imx8mn 11x11 DDR3 EVK board"
 	select IMX8MN
@@ -217,5 +227,6 @@ source "board/beacon/imx8mm/Kconfig"
 source "board/beacon/imx8mn/Kconfig"
 source "board/phytec/phycore_imx8mm/Kconfig"
 source "board/phytec/phycore_imx8mp/Kconfig"
+source "board/embest/maaxboard_nano/Kconfig"
 
 endif

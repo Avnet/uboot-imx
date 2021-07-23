@@ -1,0 +1,14 @@
+if TARGET_MAAXBOARD_NANO
+
+config SYS_BOARD
+	default "maaxboard_nano"
+
+config SYS_VENDOR
+	default "embest"
+
+config SYS_CONFIG_NAME
+	default "maaxboard_nano"
+
+source "board/freescale/common/Kconfig"
+
+endif
