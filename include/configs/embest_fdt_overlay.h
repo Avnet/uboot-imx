@@ -74,7 +74,9 @@
 				FDT_ENTRY_CHECK_RUN_ENV("enable_overlay_pwm", "maaxboard-nano-ext-pwm.dtbo") \
 				FDT_ENTRY_CHECK_RUN_ENV("enable_overlay_spi", "maaxboard-nano-ext-spi.dtbo") \
 				FDT_ENTRY_CHECK_RUN_ENV("enable_overlay_uart4", "maaxboard-nano-ext-uart4.dtbo") \
-				FDT_ENTRY_CHECK_RUN_ENV("enable_overlay_camera", "maaxboard-nano-ov5640.dtbo")
+				FDT_ENTRY_CHECK_RUN_ENV("enable_overlay_camera", "maaxboard-nano-ov5640.dtbo") \
+				FDT_ENTRY_CHECK_RUN_ENV("enable_overlay_audio", "maaxboard-nano-audio.dtbo") \
+				FDT_ENTRY_CHECK_RUN_ENV("enable_overlay_mic", "maaxboard-nano-mic.dtbo")
 
 #else
 #define FDT_ENTRY_DEF_SETTINGS         ""
