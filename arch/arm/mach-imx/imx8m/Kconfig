@@ -73,6 +73,11 @@ config TARGET_IMX8MQ_DDR4_VAL
 	select IMX8MQ
 	select IMX8M_DDR4
 
+config TARGET_MAAXBOARD
+	bool "maaxboard"
+	select IMX8MQ
+	select IMX8M_DDR4
+
 config TARGET_IMX8MM_DDR4_VAL
 	bool "imx8mm DDR4 validation board"
 	select IMX8MM
@@ -228,5 +233,6 @@ source "board/beacon/imx8mn/Kconfig"
 source "board/phytec/phycore_imx8mm/Kconfig"
 source "board/phytec/phycore_imx8mp/Kconfig"
 source "board/embest/maaxboard_nano/Kconfig"
+source "board/embest/maaxboard/Kconfig"
 
 endif

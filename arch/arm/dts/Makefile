@@ -852,6 +852,7 @@ dtb-$(CONFIG_ARCH_IMX8) += \
 	imx8-giedi.dtb
 
 dtb-$(CONFIG_ARCH_IMX8M) += \
+	maaxboard.dtb \
 	maaxboard-nano.dtb
 
 dtb-$(CONFIG_ARCH_IMX8M) += \
