@@ -280,13 +280,6 @@ int board_init(void)
 	return 0;
 }
 
-static void setup_usb(void)
-{
-	/* enable the power of usb3_0 */
-	gpio_request(IMX_GPIO_NR(1, 12), "usb_enable");
-	gpio_direction_output(IMX_GPIO_NR(1, 12), 1);
-}
-
 int board_late_init(void)
 {
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
@@ -298,7 +291,6 @@ int board_late_init(void)
 	board_late_mmc_env_init();
 #endif
 
-	setup_usb();
 	return 0;
 }
 
