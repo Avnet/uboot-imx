@@ -83,6 +83,7 @@
 
 
  #define MMC_BOOT_WITH_FDT_OVERLAY      \
+	"usb start;"                        \
 	"mmc dev ${mmcdev};"                \
 	"run envboot; "                     \
 	"if run loadimage; then "           \
