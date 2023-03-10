@@ -264,8 +264,22 @@ int board_usb_cleanup(int index, enum usb_init_type init)
 }
 #endif
 
+
+#define POWER_LED_PAD IMX_GPIO_NR(1, 8)
+static iomux_v3_cfg_t const leds_pads[] = {
+	IMX8MQ_PAD_GPIO1_IO08__GPIO1_IO8 | MUX_PAD_CTRL(NO_PAD_CTRL),
+};
+static void led_on(void)
+{
+	imx_iomux_v3_setup_multiple_pads(leds_pads, ARRAY_SIZE(leds_pads));
+
+	gpio_request(POWER_LED_PAD, "sys_led");
+	gpio_direction_output(POWER_LED_PAD, 1);
+}
+
 int board_init(void)
 {
+	led_on();
 #ifdef CONFIG_FSL_QSPI
 	board_qspi_init();
 #endif
