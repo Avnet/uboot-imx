@@ -301,7 +301,7 @@ int board_init(void)
 int board_late_init(void)
 {
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
-	env_set("board_name", "EVK");
+	env_set("board_name", "MaaXBoard");
 	env_set("board_rev", "iMX8MQ");
 #endif
 
