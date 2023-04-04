@@ -39,7 +39,7 @@
 #define CHECK_APPLY_OVERLAY_DTBO( name )     \
 	"if env exists dtoverlay_" name "; then " \
 		"for f in ${dtoverlay_" name "}; do " \
-			"setenv dtbo_file $f.dtbo; " \
+			"setenv dtbo_file $f; " \
 			FDT_APPLY_OVERLAY() \
 		" done;" \
 	"fi; "
