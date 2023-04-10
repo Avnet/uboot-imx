@@ -74,14 +74,9 @@
 };
 
 &usbotg1 {
-	pinctrl-names = "default", "sleep";
+	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_otgid1>;
-	pinctrl-1 = <&pinctrl_otgid1>;
-	dr_mode = "otg";
-	hnp-disable;
-	srp-disable;
-	adp-disable;
-	over-current-active-low;
+	dr_mode = "peripheral";
 	status = "okay";
 };
 
@@ -94,14 +89,7 @@
 };
 
 &usbotg2 {
-	pinctrl-names = "default", "sleep";
-	pinctrl-0 = <&pinctrl_otgid2>;
-	pinctrl-1 = <&pinctrl_otgid2>;
-	dr_mode = "otg";
-	hnp-disable;
-	srp-disable;
-	adp-disable;
-	over-current-active-low;
+	dr_mode = "host";
 	status = "okay";
 };
 
@@ -150,14 +138,6 @@
 	pinctrl_otgid1: usb1grp {
 		fsl,pins = <
 			MX8ULP_PAD_PTF2__USB0_ID	0x10003
-			MX8ULP_PAD_PTF4__USB0_OC	0x10003
-		>;
-	};
-
-	pinctrl_otgid2: usb2grp {
-		fsl,pins = <
-			MX8ULP_PAD_PTD23__USB1_ID	0x10003
-			MX8ULP_PAD_PTF6__USB1_OC	0x10003
 		>;
 	};
 
