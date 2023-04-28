@@ -78,6 +78,12 @@ config TARGET_MAAXBOARD
 	select IMX8MQ
 	select IMX8M_DDR4
 
+config TARGET_MAAXBOARD_MINI
+	bool "MaaXBoard-Mini"
+	select IMX8MM
+	select IMX8M_DDR4
+	select SUPPORT_SPL
+
 config TARGET_IMX8MQ_PHANBELL
 	bool "imx8mq_phanbell"
 	select BINMAN
@@ -349,6 +355,7 @@ config TARGET_IMX8MP_RSB3720A1_6G
 endchoice
 
 source "board/avnet/maaxboard/Kconfig"
+source "board/avnet/maaxboard_mini/Kconfig"
 source "board/advantech/imx8mp_rsb3720a1/Kconfig"
 source "board/beacon/imx8mm/Kconfig"
 source "board/beacon/imx8mn/Kconfig"
