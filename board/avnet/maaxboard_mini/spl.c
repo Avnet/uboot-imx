@@ -244,6 +244,5 @@ void board_init_f(ulong dummy)
 	/* DDR initialization */
 	spl_dram_init();
 
-	printf("start board_init_r()\n");
 	board_init_r(NULL, 0);
 }

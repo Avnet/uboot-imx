@@ -309,7 +309,33 @@ int board_ehci_usb_phy_mode(struct udevice *dev)
 
 	return USB_INIT_DEVICE;
 }
+#else
 
+int board_usb_init(int index, enum usb_init_type init)
+{
+	int ret = 0;
+
+	debug("--> %s() index=%d type=%d\n", __func__, index, init);
+	imx8m_usb_power(index, true);
+
+	return ret;
+}
+
+int board_usb_cleanup(int index, enum usb_init_type init)
+{
+	int ret = 0;
+
+	debug("--> %s() index=%d type=%d\n", __func__, index, init);
+	imx8m_usb_power(index, false);
+
+	return ret;
+}
+
+int board_usb_phy_mode(int port)
+{
+	debug("--> %s() port %d\n", __func__, port);
+	return USB_INIT_DEVICE;
+}
 #endif
 
 #define POWER_LED_PAD IMX_GPIO_NR(3, 3)

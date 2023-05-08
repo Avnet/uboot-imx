@@ -1385,7 +1385,11 @@ static int ci_udc_otg_phy_mode(struct udevice *dev)
 		if (val & USBNC_PHYSTATUS_ID_DIG)
 			return USB_INIT_DEVICE;
 		else
-			return USB_INIT_HOST;
+			/* Always set it as device on MaaXBoard-Mini for UUU */
+			if( is_imx8mm() )
+				return USB_INIT_DEVICE;
+			else
+				return USB_INIT_HOST;
 	} else {
 		return -EINVAL;
 	}
