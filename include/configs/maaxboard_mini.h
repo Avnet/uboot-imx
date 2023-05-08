@@ -10,6 +10,7 @@
 #include <linux/stringify.h>
 #include <asm/arch/imx-regs.h>
 #include "imx_env.h"
+#include "maaxboard_overlay.h"
 
 #define CONFIG_SYS_BOOTM_LEN		(64 * SZ_1M)
 #define CONFIG_SPL_MAX_SIZE		(148 * 1024)
@@ -120,9 +121,7 @@
 	BOOTENV \
 	JAILHOUSE_ENV \
 	"prepare_mcore=setenv mcore_clk clk-imx8mm.mcore_booted;\0" \
-	"scriptaddr=0x43500000\0" \
 	"kernel_addr_r=" __stringify(CONFIG_SYS_LOAD_ADDR) "\0" \
-	"bsp_script=boot.scr\0" \
 	"image=Image\0" \
 	"splashimage=0x50000000\0" \
 	"console=ttymxc0,115200\0" \
@@ -137,53 +136,20 @@
 	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
 	"mmcautodetect=yes\0" \
 	"mmcargs=setenv bootargs ${jh_clk} ${mcore_clk} console=${console} root=${mmcroot}\0 " \
-	"loadbootscript=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${bsp_script};\0" \
-	"bootscript=echo Running bootscript from mmc ...; " \
-		"source\0" \
+	"dtbo_addr=0x43010000\0"  \
+	"dtbo_dir=overlays\0"   \
+	"fdt_size=0x10000\0" \
+	"bootenvfile=uEnv.txt\0"  \
+	"loadenvconf=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${bootenvfile};env import -t ${loadaddr} ${filesize}\0" \
 	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
 	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr_r} ${fdtfile}\0" \
-	"mmcboot=echo Booting from mmc ...; " \
-		"run mmcargs; " \
-		"if test ${boot_fit} = yes || test ${boot_fit} = try; then " \
-			"bootm ${loadaddr}; " \
-		"else " \
-			"if run loadfdt; then " \
-				"booti ${loadaddr} - ${fdt_addr_r}; " \
-			"else " \
-				"echo WARN: Cannot load the DT; " \
-			"fi; " \
-		"fi;\0" \
-	"netargs=setenv bootargs ${jh_clk} ${mcore_clk} console=${console} " \
-		"root=/dev/nfs " \
-		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
-	"netboot=echo Booting from net ...; " \
-		"run netargs;  " \
-		"if test ${ip_dyn} = yes; then " \
-			"setenv get_cmd dhcp; " \
-		"else " \
-			"setenv get_cmd tftp; " \
-		"fi; " \
-		"${get_cmd} ${loadaddr} ${image}; " \
-		"if test ${boot_fit} = yes || test ${boot_fit} = try; then " \
-			"bootm ${loadaddr}; " \
-		"else " \
-			"if ${get_cmd} ${fdt_addr_r} ${fdtfile}; then " \
-				"booti ${loadaddr} - ${fdt_addr_r}; " \
-			"else " \
-				"echo WARN: Cannot load the DT; " \
-			"fi; " \
-		"fi;\0" \
-	"bsp_bootcmd=echo Running BSP bootcmd ...; " \
-		"mmc dev ${mmcdev}; if mmc rescan; then " \
-		   "if run loadbootscript; then " \
-			   "run bootscript; " \
-		   "else " \
-			   "if run loadimage; then " \
-				   "run mmcboot; " \
-			   "else run netboot; " \
-			   "fi; " \
-		   "fi; " \
-	   "fi;"
+	"boot_os=booti ${loadaddr} - ${fdt_addr_r};\0" \
+	"mmcboot=run mmcargs; run loadimage; run loadfdt; run boot_os\0"
+#endif
+
+#ifdef AVNET_UENV_FDTO_SUPPORT
+#undef  CONFIG_BOOTCOMMAND
+#define CONFIG_BOOTCOMMAND      MMC_BOOT_WITH_FDT_OVERLAY
 #endif
 
 /* Link Definitions */
