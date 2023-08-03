@@ -10,6 +10,7 @@
 #include <linux/stringify.h>
 #include <asm/arch/imx-regs.h>
 #include "imx_env.h"
+#include "maaxboard_overlay.h"
 
 #define CONFIG_SYS_BOOTM_LEN		(32 * SZ_1M)
 
@@ -116,13 +117,23 @@
 	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
 	"mmcautodetect=yes\0" \
 	"mmcargs=setenv bootargs ${jh_clk} ${mcore_clk} console=${console} root=${mmcroot}\0 " \
-	"bootscript=echo Running bootscript from mmc ...; " \
+	"bootscript=echo Running bootscript from mmc ...\0" \
+	"dtbo_addr=0x43010000\0"   \
+	"dtbo_dir=overlays\0"   \
+	"fdt_size=0x10000\0" \
+	"bootenvfile=uEnv.txt\0"  \
+	"loadenvconf=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${bootenvfile};env import -t ${loadaddr} ${filesize}\0" \
 		"source\0" \
 	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
 	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr_r} ${fdtfile}\0" \
 	"boot_os=booti ${loadaddr} - ${fdt_addr_r};\0" \
 	"mmcboot=run mmcargs; run loadimage; run loadfdt; run boot_os\0" \
 	"bsp_bootcmd=echo Running BSP bootcmd ...;mmc dev ${mmcdev};run mmcboot"
+
+#ifdef AVNET_UENV_FDTO_SUPPORT
+#undef  CONFIG_BOOTCOMMAND
+#define CONFIG_BOOTCOMMAND      MMC_BOOT_WITH_FDT_OVERLAY
+#endif
 
 
 /* Link Definitions */
