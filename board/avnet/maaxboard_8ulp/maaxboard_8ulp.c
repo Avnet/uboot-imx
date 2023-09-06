@@ -178,8 +178,12 @@ int board_init(void)
 
 	/* When sync with M33 is failed, use local driver to set for video */
 	if (!is_m33_handshake_necessary() && IS_ENABLED(CONFIG_VIDEO)) {
+#ifdef CONFIG_TARGET_IMX8ULP_EVK
 		mipi_dsi_mux_panel();
 		mipi_dsi_panel_backlight();
+#else
+		;
+#endif
 	}
 
 	return 0;
