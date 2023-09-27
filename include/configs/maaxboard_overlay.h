@@ -59,7 +59,7 @@
 
 #define MMC_BOOT_WITH_FDT_OVERLAY   \
 	"mmc dev ${mmcdev};"            \
-	"run mmcargs; run loadenvconf;" \
+	"run loadenvconf; run mmcargs;" \
 	"run loadimage; run loadfdt; "  \
 	FDT_ENTRY_DEF_SETTINGS          \
 	"run boot_os; "                 \
