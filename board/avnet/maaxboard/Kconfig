@@ -1,0 +1,16 @@
+if TARGET_MAAXBOARD
+
+config SYS_BOARD
+	default "maaxboard"
+
+config SYS_VENDOR
+	default "avnet"
+
+config SYS_CONFIG_NAME
+	default "maaxboard"
+
+config IMX_CONFIG
+	default "arch/arm/mach-imx/imx8m/imximage.cfg"
+
+endif
+

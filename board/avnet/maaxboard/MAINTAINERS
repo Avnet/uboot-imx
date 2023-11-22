@@ -1,0 +1,7 @@
+MaaXBOARD
+M:	Lily Li <lily.li@avnet.com>
+S:	Maintained
+B:  board/freescale/imx8mq_evk/
+F:	board/avnet/maaxboard/
+F:	include/configs/maaxboard.h
+F:	configs/maaxboard_defconfig

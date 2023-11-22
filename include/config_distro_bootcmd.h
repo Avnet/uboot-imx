@@ -296,10 +296,11 @@
 #else
 #define BOOTENV_RUN_NET_USB_START
 #define BOOTENV_SHARED_USB
-#define BOOTENV_DEV_USB \
+/*#define BOOTENV_DEV_USB \
 	BOOT_TARGET_DEVICES_references_USB_without_CONFIG_CMD_USB
 #define BOOTENV_DEV_NAME_USB \
 	BOOT_TARGET_DEVICES_references_USB_without_CONFIG_CMD_USB
+*/
 #endif
 
 #ifdef CONFIG_CMD_VIRTIO
