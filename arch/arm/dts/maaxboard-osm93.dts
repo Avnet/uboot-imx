@@ -29,6 +29,28 @@
 			linux,cma-default;
 		};
 	};
+	
+	reg_usbotg1_vbus: regulator-usbotg1-vbus {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_reg_usbotg1>;
+		regulator-name = "regulator-usbotg1-vbus";
+		gpio = <&gpio4 28 GPIO_ACTIVE_HIGH>;
+		regulator-min-microvolt = <5000000>;
+		regulator-max-microvolt = <5000000>;
+		enable-active-high;
+	};
+
+	reg_usbotg2_vbus: regulator-usbotg2-vbus {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_reg_usbotg2>;
+		regulator-name = "regulator-usbotg2-vbus";
+		gpio = <&gpio4 29 GPIO_ACTIVE_HIGH>;
+		regulator-min-microvolt = <5000000>;
+		regulator-max-microvolt = <5000000>;
+		enable-active-high;
+	};
 };
 
 &lpi2c2 {
@@ -150,6 +172,28 @@
 	status = "okay";
 };
 
+&usbotg1 {
+	dr_mode = "otg";
+	hnp-disable;
+	srp-disable;
+	adp-disable;
+	usb-role-switch;
+	disable-over-current;
+	samsung,picophy-pre-emp-curr-control = <3>;
+	samsung,picophy-dc-vol-level-adjust = <7>;
+	vbus-supply = <&reg_usbotg1_vbus>;
+	status = "okay";
+};
+
+&usbotg2 {
+	dr_mode = "host";
+	disable-over-current;
+	samsung,picophy-pre-emp-curr-control = <3>;
+	samsung,picophy-dc-vol-level-adjust = <7>;
+	vbus-supply = <&reg_usbotg2_vbus>;
+	status = "okay";
+};
+
 &iomuxc {
 	pinctrl_lpi2c2: lpi2c2grp {
 		fsl,pins = <
@@ -184,6 +228,18 @@
 	pinctrl_pmic: pmicgrp {
 		fsl,pins = <
 			MX93_PAD_GPIO_IO13__GPIO2_IO13			0x111e
+		>;
+	};
+	
+	pinctrl_reg_usbotg1: regusbotg1grp {
+		fsl,pins = <
+			MX93_PAD_CCM_CLKO3__GPIO4_IO28			0x51e
+		>;
+	};
+
+	pinctrl_reg_usbotg2: regusbotg2grp {
+		fsl,pins = <
+			MX93_PAD_CCM_CLKO4__GPIO4_IO29			0x51e
 		>;
 	};
 };
