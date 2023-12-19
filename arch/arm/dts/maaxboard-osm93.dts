@@ -208,7 +208,7 @@
 		clock-frequency = <5000000>;
 
 		ethphy1: ethernet-phy@4 {
-			compatible = "ethernet-phy-ieee802.3-c22";
+			compatible = "ethernet-phy-id0022.1642";
 			reg = <4>;
 			eee-broken-1000t;
 		};
@@ -229,7 +229,7 @@
 		clock-frequency = <5000000>;
 
 		ethphy2: ethernet-phy@5 {
-			compatible = "ethernet-phy-ieee802.3-c22";
+			compatible = "ethernet-phy-id0022.1642";
 			reg = <5>;
 			eee-broken-1000t;
 		};
