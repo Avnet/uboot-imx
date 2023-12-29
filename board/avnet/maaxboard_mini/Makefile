@@ -1,5 +1,5 @@
 #
-# Copyright 2018 NXP
+# Copyright 2023 Avnet
 #
 # SPDX-License-Identifier:      GPL-2.0+
 #
