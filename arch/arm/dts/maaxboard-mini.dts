@@ -24,22 +24,6 @@
 		bootargs = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200";
 		stdout-path = &uart1;
 	};
-
-	regulators {
-		compatible = "simple-bus";
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		reg_usb1_power: regulator-usb-3v3 {
-			compatible = "regulator-fixed";
-			regulator-name = "usb1-power-en";
-			regulator-min-microvolt = <3300000>;
-			regulator-max-microvolt = <3300000>;
-			gpio = <&gpio1 12 GPIO_ACTIVE_HIGH>;
-			off-on-delay = <1000>;
-			startup-delay-us = <300>;
-		};
-	};
 };
 
 &A53_0 {
@@ -53,16 +37,19 @@
 };
 
 &usdhc1 {
-	pinctrl-names = "default", "state_100mhz";
+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
 	pinctrl-0 = <&pinctrl_usdhc1>;
 	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
 	bus-width = <8>;
 	non-removable;
+	no-sdio;
+	no-1-8-v;
 	status = "okay";
 };
 
 &usbotg1 {
-	dr_mode = "host";
+	dr_mode = "peripheral";
 	picophy,pre-emp-curr-control = <3>;
 	picophy,dc-vol-level-adjust = <7>;
 	status = "okay";
@@ -295,6 +282,22 @@
 			MX8MM_IOMUXC_SD1_DATA7_USDHC1_DATA7     0x1d4
 			MX8MM_IOMUXC_SD1_RESET_B_USDHC1_RESET_B 0x1d4
 			MX8MM_IOMUXC_SD1_STROBE_USDHC1_STROBE   0x194
+		>;
+	};
+
+	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
+		fsl,pins = <
+			MX8MM_IOMUXC_SD1_CLK_USDHC1_CLK         0x196
+			MX8MM_IOMUXC_SD1_CMD_USDHC1_CMD         0x1d6
+			MX8MM_IOMUXC_SD1_DATA0_USDHC1_DATA0     0x1d6
+			MX8MM_IOMUXC_SD1_DATA1_USDHC1_DATA1     0x1d6
+			MX8MM_IOMUXC_SD1_DATA2_USDHC1_DATA2     0x1d6
+			MX8MM_IOMUXC_SD1_DATA3_USDHC1_DATA3     0x1d6
+			MX8MM_IOMUXC_SD1_DATA4_USDHC1_DATA4     0x1d6
+			MX8MM_IOMUXC_SD1_DATA5_USDHC1_DATA5     0x1d6
+			MX8MM_IOMUXC_SD1_DATA6_USDHC1_DATA6     0x1d6
+			MX8MM_IOMUXC_SD1_DATA7_USDHC1_DATA7     0x1d6
+			MX8MM_IOMUXC_SD1_STROBE_USDHC1_STROBE   0x196
 		>;
 	};
 

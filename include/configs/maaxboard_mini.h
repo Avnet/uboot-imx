@@ -82,8 +82,8 @@
 	CFG_MFG_ENV_SETTINGS_DEFAULT \
 	"initrd_addr=0x43800000\0" \
 	"initrd_high=0xffffffffffffffff\0" \
-	"emmc_dev=2\0"\
-	"sd_dev=1\0" \
+	"emmc_dev=1\0"\
+	"sd_dev=0\0" \
 
 /* Initial environment variables */
 #if defined(CONFIG_NAND_BOOT)
@@ -176,7 +176,7 @@
 	   "fi;"
 #endif
 
-#define CONFIG_MMCROOT			"/dev/mmcblk1p2"  /* USDHC1 */
+#define CONFIG_MMCROOT			"/dev/mmcblk0p2"  /* USDHC1 */
 
 
 #define CFG_SYS_SDRAM_BASE           0x40000000
