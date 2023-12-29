@@ -361,6 +361,13 @@ config TARGET_MAAXBOARD
 	select IMX8MQ
 	select IMX8M_DDR4
 
+config TARGET_MAAXBOARD_MINI
+	bool "MaaXBoard-Mini"
+	select IMX8MM
+	select IMX8M_DDR4
+	select SUPPORT_SPL
+
+
 config TARGET_VERDIN_IMX8MM
 	bool "Support Toradex Verdin iMX8M Mini module"
 	select BINMAN
@@ -456,6 +463,7 @@ config TARGET_LIBREM5
 endchoice
 
 source "board/avnet/maaxboard/Kconfig"
+source "board/avnet/maaxboard_mini/Kconfig"
 source "board/advantech/imx8mp_rsb3720a1/Kconfig"
 source "board/beacon/imx8mm/Kconfig"
 source "board/beacon/imx8mn/Kconfig"
