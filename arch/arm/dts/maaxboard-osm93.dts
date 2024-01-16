@@ -29,7 +29,7 @@
 			linux,cma-default;
 		};
 	};
-	
+
 	reg_usbotg1_vbus: regulator-usbotg1-vbus {
 		compatible = "regulator-fixed";
 		pinctrl-names = "default";
@@ -50,6 +50,18 @@
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
 		enable-active-high;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_gpio_leds>;
+		status = "okay";
+
+		ledred {
+			gpios = <&gpio2 12 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
 	};
 };
 
@@ -88,7 +100,7 @@
 				regulator-always-on;
 				regulator-ramp-delay = <3125>;
 			};
-			
+
 			buck3: BUCK3 {
 				regulator-name = "VCC_SOC_0V8_1";
 				regulator-min-microvolt = <800000>;
@@ -128,7 +140,7 @@
 				regulator-boot-on;
 				regulator-always-on;
 			};
-			
+
 			ldo3: LDO3 {
 				regulator-name = "VCC_LDO3_1V8";
 				regulator-min-microvolt = <1800000>;
@@ -265,14 +277,14 @@
 			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x13fe
 			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x15fe
 		>;
-	};	
+	};
 
 	pinctrl_pmic: pmicgrp {
 		fsl,pins = <
 			MX93_PAD_GPIO_IO13__GPIO2_IO13			0x111e
 		>;
 	};
-	
+
 	pinctrl_reg_usbotg1: regusbotg1grp {
 		fsl,pins = <
 			MX93_PAD_CCM_CLKO3__GPIO4_IO28			0x51e
@@ -284,7 +296,7 @@
 			MX93_PAD_CCM_CLKO4__GPIO4_IO29			0x51e
 		>;
 	};
-	
+
 	pinctrl_eqos: eqosgrp {
 		fsl,pins = <
 			MX93_PAD_ENET1_MDC__ENET_QOS_MDC			0x57e
@@ -320,6 +332,12 @@
 			MX93_PAD_ENET2_TD3__ENET1_RGMII_TD3		0x57e
 			MX93_PAD_ENET2_TXC__ENET1_RGMII_TXC		0x5fe
 			MX93_PAD_ENET2_TX_CTL__ENET1_RGMII_TX_CTL	0x57e
+		>;
+	};
+
+	pinctrl_gpio_leds: gpioleds {
+		fsl,pins = <
+			MX93_PAD_GPIO_IO12__GPIO2_IO12		0x51e
 		>;
 	};
 };
