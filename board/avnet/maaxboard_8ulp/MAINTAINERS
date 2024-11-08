@@ -1,0 +1,7 @@
+MaaXBoard 8ULP
+M:	Wenxue Guo <wenxue.guo@avnet.com>
+S:	Maintained
+B:	board/freescale/imx8ulp_evk/
+F:	board/avnet/maaxboard_8ulp
+F:	include/configs/maaxboard_8ulp.h
+F:	configs/maaxboard_8ulp_defconfig
