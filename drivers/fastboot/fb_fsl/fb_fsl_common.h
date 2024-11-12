@@ -31,6 +31,8 @@
 #ifndef FB_FSL_COMMON_H
 #define FB_FSL_COMMON_H
 
+#include "fastboot_led_status.h"
+
 #ifdef CONFIG_AVB_SUPPORT
 #include <dt_table.h>
 #include <fsl_avb.h>

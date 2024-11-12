@@ -266,6 +266,8 @@ static void process_flash_blkdev(const char *cmdbuf, void *download_buffer,
 					} else {
 						printf("Writing '%s' DONE!\n", ptn->name);
 						fastboot_okay(NULL, response);
+
+						fastboot_led_on();
 					}
 				}
 				/* Write backup gpt image */

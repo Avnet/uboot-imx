@@ -55,7 +55,7 @@
         compatible = "gpio-leds";
         pinctrl-names = "default";
         pinctrl-0 = <&pinctrl_gpio_leds>;
-        status = "okay";
+        status = "disabled";
 
         ledred {
             gpios = <&gpio2 12 GPIO_ACTIVE_HIGH>;
@@ -75,7 +75,7 @@
 	status = "okay";
 
 	id_eeprom: eeprom@50 {
-		compatible = "atmel,24c32";
+		compatible = "atmel,24c64";
 		reg = <0x50>;
 		status = "okay";
 	};

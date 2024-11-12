@@ -306,6 +306,8 @@ static void download(char *cmd_parameter, char *response)
 	} else {
 		printf("Starting download of %d bytes\n",
 		       fastboot_bytes_expected);
+
+		fastboot_led_toggle();
 		fastboot_response("DATA", response, "%s", cmd_parameter);
 	}
 }
@@ -376,6 +378,7 @@ void fastboot_data_download(const void *fastboot_data,
  */
 void fastboot_data_complete(char *response)
 {
+	fastboot_led_toggle();
 	/* Download complete. Respond with "OKAY" */
 	fastboot_okay(NULL, response);
 	printf("\ndownloading of %d bytes finished\n", fastboot_bytes_received);
