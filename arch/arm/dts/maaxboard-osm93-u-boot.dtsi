@@ -78,6 +78,10 @@
 	bootph-some-ram;
 };
 
+&pinctrl_usdhc1 {
+	u-boot,dm-spl;
+};
+
 &gpio1 {
 	bootph-pre-ram;
 	bootph-some-ram;
@@ -96,6 +100,10 @@
 &gpio4 {
 	bootph-pre-ram;
 	bootph-some-ram;
+};
+
+&usdhc1 {
+	u-boot,dm-spl;
 };
 
 &lpuart1 {
