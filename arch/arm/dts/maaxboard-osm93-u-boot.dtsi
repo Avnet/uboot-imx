@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0+
 /*
- * Copyright 2022 NXP
+ * Copyright 2025 Avnet
  */
 
 #include "imx93-u-boot.dtsi"
@@ -41,11 +41,11 @@
 };
 
 &A55_0 {
-	clocks = <&clk IMX93_CLK_A55_SEL>;
+       clocks = <&clk IMX93_CLK_A55_SEL>;
 };
 
 &A55_1 {
-	clocks = <&clk IMX93_CLK_A55_SEL>;
+       clocks = <&clk IMX93_CLK_A55_SEL>;
 };
 
 &{/soc@0} {
@@ -79,7 +79,7 @@
 };
 
 &pinctrl_usdhc1 {
-	u-boot,dm-spl;
+	bootph-pre-ram;
 };
 
 &gpio1 {
@@ -103,7 +103,12 @@
 };
 
 &usdhc1 {
-	u-boot,dm-spl;
+	bootph-pre-ram;
+};
+
+&usdhc2 {
+	bootph-pre-ram;
+	fsl,signal-voltage-switch-extra-delay-ms = <8>;
 };
 
 &lpuart1 {
@@ -112,6 +117,10 @@
 };
 
 &lpi2c2 {
+	bootph-pre-ram;
+};
+
+&lpi2c3 {
 	bootph-pre-ram;
 };
 
@@ -128,6 +137,7 @@
 };
 
 &fec {
+	phy-reset-gpios = <&pcal6524 16 GPIO_ACTIVE_LOW>;
 	phy-reset-duration = <15>;
 	phy-reset-post-delay = <100>;
 };
