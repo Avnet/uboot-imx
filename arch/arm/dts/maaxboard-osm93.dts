@@ -51,6 +51,17 @@
 	        enable-active-high;
 	};
 
+	leds {
+        compatible = "gpio-leds";
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_gpio_leds>;
+        status = "okay";
+
+        ledred {
+            gpios = <&gpio2 12 GPIO_ACTIVE_HIGH>;
+            default-state = "on";
+        };
+    };
 };
 
 /* I2C_A */
@@ -398,4 +409,10 @@
 			MX93_PAD_GPIO_IO02__GPIO2_IO02			0x111e
 		>;
 	};
+
+	pinctrl_gpio_leds: gpioleds {
+        fsl,pins = <
+            MX93_PAD_GPIO_IO12__GPIO2_IO12      0x51e
+        >;
+    };
 };
