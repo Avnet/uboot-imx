@@ -115,4 +115,12 @@
 #include "imx93_evk_android.h"
 #endif
 
+#define I2C_A                           0
+#define I2C_B                           1
+#define I2C_LCD                         2
+#define I2C_CAM                         4
+#define BI_EEPROM_I2C_ADDR              0x50
+
+#define ENV_FDTFILE_MAX_SIZE            64
+
 #endif

@@ -16,4 +16,10 @@ config IMX93_EVK_LPDDR4X
 	help
 	  Select the LPDDR4X timing and 0.6V VDDQ
 
+config CMD_BOARDINFO
+    bool "Enable BOARDINFO command in U-Boot"
+    default y
+    help
+      Whether to enable the addition of the BOARDINFO command in U-Boot.
+
 endif

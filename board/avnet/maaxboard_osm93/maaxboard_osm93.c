@@ -21,11 +21,14 @@
 #include <usb.h>
 #include <dwc3-uboot.h>
 #include <asm/gpio.h>
+#include "./common/boardinfo.h"
 
 DECLARE_GLOBAL_DATA_PTR;
 
 #define UART_PAD_CTRL	(PAD_CTL_DSE(6) | PAD_CTL_FSEL2)
 #define WDOG_PAD_CTRL	(PAD_CTL_DSE(6) | PAD_CTL_ODE | PAD_CTL_PUE | PAD_CTL_PE)
+
+const board_info_t *binfo = NULL;
 
 static iomux_v3_cfg_t const uart_pads[] = {
 	MX93_PAD_UART1_RXD__LPUART1_RX | MUX_PAD_CTRL(UART_PAD_CTRL),
@@ -335,6 +338,12 @@ int board_init(void)
 		setup_eqos();
 
 	board_gpio_init();
+
+	binfo = bi_read();
+	if (binfo == NULL) {
+		printf("Error: failed to initialize boardinfo!\n");
+		return -ENOENT;
+	}
 
 	return 0;
 }
