@@ -23,6 +23,8 @@
 #include <asm/gpio.h>
 #include "./common/boardinfo.h"
 
+int fastboot_led_init(void);
+
 DECLARE_GLOBAL_DATA_PTR;
 
 #define UART_PAD_CTRL	(PAD_CTL_DSE(6) | PAD_CTL_FSEL2)
@@ -338,6 +340,11 @@ int board_init(void)
 		setup_eqos();
 
 	board_gpio_init();
+	if(0 != fastboot_led_init())
+	{
+		printf("Error: %s, fastboot_led_init error!\n", __func__);
+	}
+
 
 	binfo = bi_read();
 	if (binfo == NULL) {
