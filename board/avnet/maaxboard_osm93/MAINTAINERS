@@ -1,0 +1,6 @@
+MaaXBoard-Osm93 BOARD
+M:	Lily Li <lily.li@avnet.com>
+B:	based on imx93_11x11_evk board
+F:	board/avnet/maaxboard-osm93/
+F:	include/configs/maaxboard-osm93.h
+F:	configs/maaxboard-osm93_defconfig
