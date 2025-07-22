@@ -73,6 +73,34 @@
     status = "okay";
 };
 
+/* I2C_A */
+&lpi2c1 {
+    #address-cells = <1>;
+    #size-cells = <0>;
+    clock-frequency = <400000>;
+    pinctrl-names = "default", "sleep";
+    pinctrl-0 = <&pinctrl_lpi2c1>;
+    pinctrl-1 = <&pinctrl_lpi2c1>;
+    status = "okay";
+
+    id_eeprom: eeprom@50 {
+        compatible = "atmel,24c64";
+        reg = <0x50>;
+        status = "okay";
+    };
+
+    sys_rtc: rtc@32 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_rtc>;
+        compatible = "microcrystal,rv8803";
+        reg = <0x32>;
+        interrupt-parent = <&gpio2>;
+        interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+        wakeup-source;
+    };
+};
+
+/* I2C_B */
 &lpi2c2 {
     #address-cells = <1>;
     #size-cells = <0>;
@@ -255,6 +283,15 @@
 };
 
 &iomuxc {
+    /* I2C_A */
+    pinctrl_lpi2c1: lpi2c1grp {
+        fsl,pins = <
+            MX93_PAD_I2C1_SCL__LPI2C1_SCL           0x4000087e
+            MX93_PAD_I2C1_SDA__LPI2C1_SDA           0x4000087e
+        >;
+    };
+
+    /* I2C_B */
     pinctrl_lpi2c2: lpi2c2grp {
         fsl,pins = <
             MX93_PAD_I2C2_SCL__LPI2C2_SCL           0x40000b9e
@@ -379,6 +416,12 @@
     pinctrl_gpio_leds: gpioleds {
         fsl,pins = <
             MX93_PAD_GPIO_IO12__GPIO2_IO12      0x51e
+        >;
+    };
+
+    pinctrl_rtc: rtcgrp {
+        fsl,pins = <
+            MX93_PAD_GPIO_IO02__GPIO2_IO02          0x111e
         >;
     };
 };

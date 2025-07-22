@@ -136,6 +136,14 @@
 	bootph-pre-ram;
 };
 
+&pinctrl_lpi2c1 {
+	bootph-pre-ram;
+};
+
+&id_eeprom {
+	bootph-pre-ram;
+};
+
 &pinctrl_lpi2c2 {
 	bootph-pre-ram;
 };

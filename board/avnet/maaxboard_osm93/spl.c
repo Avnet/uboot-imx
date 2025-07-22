@@ -35,8 +35,34 @@
 #include <power/pca9450.h>
 #include <power/pf0900.h>
 #include <asm/arch/trdc.h>
+#include "./common/boardinfo.h"
+#include "./common/som_variant.h"
+#include "ddr_timings.h"
+#include <serial.h>
 
 DECLARE_GLOBAL_DATA_PTR;
+
+static variant_record_t variants[] = {
+	FEATURE_RECORD ("92N0A00E",
+			REVISION_RECORD("20", SZ_512M, 0, lpddr4_512MiB_nanya_timing),
+	),
+	FEATURE_RECORD ("04N0A00I",
+			REVISION_RECORD("20", SZ_1G, 0, lpddr4_1GiB_nanya_timing),
+	),
+	FEATURE_RECORD ("03N0A00E",
+			REVISION_RECORD("20", SZ_1G, 0, lpddr4_1GiB_nanya_timing),
+			REVISION_RECORD("21", SZ_1G, 0, lpddr4_1GiB_nanya_timing),
+	),
+	FEATURE_RECORD ("03N0A00I",
+			REVISION_RECORD("20", SZ_1G, 0, lpddr4_1GiB_nanya_timing),
+	),
+	FEATURE_RECORD ("14N0A00I",
+			REVISION_RECORD("20", SZ_1G, 0, lpddr4_2GiB_micron_timing),
+	),
+	{ NULL },
+};
+
+board_info_t *binfo;
 
 int spl_board_boot_device(enum boot_device boot_dev_spl)
 {
@@ -67,17 +93,67 @@ void spl_board_init(void)
 	puts("Normal Boot\n");
 }
 
-extern struct dram_timing_info dram_timing_1866mts;
-void spl_dram_init(void)
+static int spl_dram_init(const dram_config_t *cfg)
 {
-	struct dram_timing_info *ptiming = &dram_timing;
-#if IS_ENABLED(CONFIG_IMX93_EVK_LPDDR4X)
-	if (is_voltage_mode(VOLT_LOW_DRIVE))
-		ptiming = &dram_timing_1866mts;
-#endif
+	struct bd_info *bd = gd->bd;
+	int idx;
 
-	printf("DDR: %uMTS\n", ptiming->fsp_msg[0].drate);
-	ddr_init(ptiming);
+	bd->bi_dram[0].start = CFG_SYS_SDRAM_BASE;
+	bd->bi_dram[0].size = cfg->size[0];
+	bd->bi_dram[1].start = 0;
+	bd->bi_dram[1].size = cfg->size[1];
+
+	for (idx = 0; idx < CONFIG_NR_DRAM_BANKS; idx++)
+		gd->ram_size += cfg->size[idx];
+
+	return ddr_init(cfg->timing);
+}
+
+static int read_string(char* buff, int buff_len)
+{
+	int idx = 0;
+
+	while (idx < buff_len) {
+		buff[idx] = serial_getc();
+		putc(buff[idx]);
+		if (buff[idx] == '\r' || buff[idx] == '\n' || buff[idx] == ' ')
+			break;
+		idx++;
+	}
+
+	buff[idx] = '\0';
+
+	return idx;
+}
+
+typedef struct variant_key {
+	char	feature[BI_FEATURE_LEN + 1];
+	char	revision[BI_REVISION_LEN + 1];
+} t_variant_key;
+
+static int readin_variant_key(t_variant_key *key)
+{
+	int ret;
+
+	printf("Enter feature key for basic board initialization and hit <enter>.\n");
+	printf("feature? > ");
+
+	ret = read_string(key->feature, sizeof(key->feature));
+	if (ret == 0)
+		return -EINVAL;
+
+	printf("\n");
+
+	printf("Enter revision key for basic board initialization and hit <enter>.\n");
+	printf("revision? > ");
+
+	ret = read_string(key->revision, sizeof(key->revision));
+	if (ret == 0)
+		return -EINVAL;
+
+	printf("\n");
+
+	return 0;
 }
 
 #if CONFIG_IS_ENABLED(DM_PMIC_PF0900)
@@ -216,9 +292,17 @@ int power_init_board(void)
 }
 #endif
 
+static void spl_reset_board(void)
+{
+	reset_cpu();
+}
+
 void board_init_f(ulong dummy)
 {
+	t_variant_key key;
+	const revision_record_t *rev;
 	int ret;
+	bool input_binfo = false;
 
 	/* Clear the BSS. */
 	memset(__bss_start, 0, __bss_end - __bss_start);
@@ -230,6 +314,8 @@ void board_init_f(ulong dummy)
 	board_early_init_f();
 
 	spl_early_init();
+
+	spl_set_bd();
 
 	preloader_console_init();
 
@@ -254,8 +340,66 @@ void board_init_f(ulong dummy)
 	/* Setup TRDC for DDR access */
 	trdc_init();
 
+	binfo = bi_read();
+	if (binfo == NULL) {
+		printf("Warning: failed to initialize boardinfo!\n");
+
+		binfo = bi_alloc();
+
+		input_binfo = true;
+	}
+	else {
+		rev = find_revision_record(variants, bi_get_feature(binfo), bi_get_revision(binfo));
+		if (rev == NULL) {
+			printf("Warning: the content of the ID-EEPROM indicates \n"
+					"   a module variant that is not supported by the software used!\n");
+			printf("The current content is: \n");
+			bi_print(binfo);
+
+			printf("If the feature and revision keys should now be overwritten \n"
+					"   with new contents press <o|O>? \n");
+
+			while (true) {
+				char ch = serial_getc();
+
+				if (ch == 'o' || ch == 'O')
+					break;
+
+				hang();
+			}
+
+			input_binfo = true;
+		}
+	}
+
+	if (input_binfo) {
+		while (true) {
+			print_variants(variants);
+			if (readin_variant_key(&key) == 0) {
+				rev = find_revision_record(variants, key.feature, key.revision);
+				if (rev) {
+					bi_set_feature(binfo, key.feature);
+					bi_set_revision(binfo, key.revision);
+					if (bi_save(binfo)) {
+						printf("Error: the variant information could not be saved!\n");
+					}
+					else
+						break;
+				}
+			}
+		}
+	}
+
+	bi_inc_boot_count(binfo);
+	bi_print(binfo);
+
 	/* DDR initialization */
-	spl_dram_init();
+	ret = spl_dram_init(&rev->dram_cfg);
+	if (ret != 0) {
+		printf("Error: failed to initialize DRAM, reset system!\n");
+		spl_reset_board();
+		hang();
+	}
 
 	/* Put M33 into CPUWAIT for following kick */
 	ret = m33_prepare();
