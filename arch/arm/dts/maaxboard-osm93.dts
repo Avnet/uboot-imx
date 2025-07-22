@@ -51,6 +51,18 @@
         regulator-max-microvolt = <5000000>;
         enable-active-high;
     };
+
+    leds {
+        compatible = "gpio-leds";
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_gpio_leds>;
+        status = "okay";
+
+        ledred {
+            gpios = <&gpio2 12 GPIO_ACTIVE_HIGH>;
+            default-state = "on";
+        };
+    };
 };
 
 &mu1 {
@@ -361,6 +373,12 @@
             MX93_PAD_ENET2_TD3__ENET1_RGMII_TD3             0x57e
             MX93_PAD_ENET2_TXC__ENET1_RGMII_TXC             0x5fe
             MX93_PAD_ENET2_TX_CTL__ENET1_RGMII_TX_CTL       0x57e
+        >;
+    };
+
+    pinctrl_gpio_leds: gpioleds {
+        fsl,pins = <
+            MX93_PAD_GPIO_IO12__GPIO2_IO12      0x51e
         >;
     };
 };
